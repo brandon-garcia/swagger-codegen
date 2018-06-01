@@ -212,8 +212,8 @@ public class {{classname}} {
     @Deprecated
     {{/isDeprecated}}
     public {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{operationId}}({{#allParams}}{{{dataType}}} {{paramName}}{{#hasMore}}, {{/hasMore}}{{/allParams}}) throws ApiException {
-        {{#returnType}}ApiResponse<{{{returnType}}}> {{localVariablePrefix}}resp = {{/returnType}}{{operationId}}WithHttpInfo({{#allParams}}{{paramName}}{{#hasMore}}, {{/hasMore}}{{/allParams}});{{#returnType}}
-        return {{localVariablePrefix}}resp.getData();{{/returnType}}
+        {{#returnType}}return {{/returnType}}{{operationId}}WithHttpInfo({{#allParams}}{{paramName}}{{#hasMore}}, {{/hasMore}}{{/allParams}}){{^returnType}};{{/returnType}}
+        {{#returnType}}    .getData();{{/returnType}}
     }
 
     /**
