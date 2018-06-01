@@ -56,7 +56,7 @@ import {{invokerPackage}}.auth.OAuth;
 
 {{>generatedAnnotation}}
 public class ApiClient {
-  private Map<String, String> defaultHeaderMap = new HashMap<String, String>();
+  private Map<String, String> defaultHeaderMap = new HashMap<>();
   private String basePath = "{{{basePath}}}";
   private boolean debugging = false;
   private int connectionTimeout = 0;
@@ -100,7 +100,7 @@ public class ApiClient {
     setUserAgent("{{#httpUserAgent}}{{{.}}}{{/httpUserAgent}}{{^httpUserAgent}}Swagger-Codegen/{{{artifactVersion}}}/java{{/httpUserAgent}}");
 
     // Setup authentications (key: authentication name, value: authentication).
-    authentications = new HashMap<String, Authentication>();{{#authMethods}}{{#isBasic}}
+    authentications = new HashMap<>();{{#authMethods}}{{#isBasic}}
     authentications.put("{{name}}", new HttpBasicAuth());{{/isBasic}}{{#isApiKey}}
     authentications.put("{{name}}", new ApiKeyAuth({{#isKeyInHeader}}"header"{{/isKeyInHeader}}{{^isKeyInHeader}}"query"{{/isKeyInHeader}}, "{{keyParamName}}"));{{/isApiKey}}{{#isOAuth}}
     authentications.put("{{name}}", new OAuth());{{/isOAuth}}{{/authMethods}}
@@ -417,7 +417,7 @@ public class ApiClient {
    * @return A list containing a single {@code Pair} object.
    */
   public List<Pair> parameterToPair(String name, Object value) {
-    List<Pair> params = new ArrayList<Pair>();
+    List<Pair> params = new ArrayList<>();
 
     // preconditions
     if (name == null || name.isEmpty() || value == null || value instanceof Collection) {
@@ -439,7 +439,7 @@ public class ApiClient {
    * @return A list of {@code Pair} objects.
    */
   public List<Pair> parameterToPairs(String collectionFormat, String name, Collection value) {
-    List<Pair> params = new ArrayList<Pair>();
+    List<Pair> params = new ArrayList<>();
 
     // preconditions
     if (name == null || name.isEmpty() || value == null) {
