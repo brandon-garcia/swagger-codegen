@@ -1060,7 +1060,7 @@ public class ApiClient {
     /**
      * Set header parameters to the request builder, including default headers.
      *
-     * @param headerParams Header parameters in the ofrm of Map
+     * @param headerParams Header parameters in the form of Map
      * @param reqBuilder Request.Builder
      */
     public void processHeaderParams(Map<String, String> headerParams, Request.Builder reqBuilder) {
