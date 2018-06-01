@@ -275,7 +275,7 @@ public class ApiClient {
     }
 
     {{#java8}}
-    private Optional<T> getAuthenticationByType(Class<T> clazz) {
+    private <T> Optional<T> getAuthenticationByType(Class<T> clazz) {
         return authentications
             .values()
             .stream()
