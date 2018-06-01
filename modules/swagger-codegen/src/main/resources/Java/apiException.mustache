@@ -21,6 +21,16 @@ public class ApiException extends{{#useRuntimeException}} RuntimeException {{/us
     @Getter
     private String responseBody = null;
 
+    public static ApiException missingParam(String paramName, String operationId) {
+        final String msg = String.format("Missing the required parameter '%s' when calling %s", paramName, operationId);
+        return new ApiException(msg);
+    }
+
+    public static ApiException missingParam(int code, String paramName, String operationId) {
+        final String msg = String.format("Missing the required parameter '%s' when calling %s", paramName, operationId);
+        return new ApiException(code, msg);
+    }
+
     public ApiException() {}
 
     public ApiException(Throwable throwable) {
