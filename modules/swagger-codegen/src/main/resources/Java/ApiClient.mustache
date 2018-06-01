@@ -12,6 +12,7 @@ import com.fasterxml.jackson.datatype.joda.JodaModule;
 {{/joda}}
 {{#java8}}
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import java.util.stream;
 {{/java8}}
 {{#threetenbp}}
 import com.fasterxml.jackson.datatype.threetenbp.ThreeTenModule;
@@ -189,18 +190,68 @@ public class ApiClient {
     return authentications.get(authName);
   }
 
+  {{#java8}}
+  private Optional<Authentication> getAuthenticationByType(Class clazz) {
+      return authentications
+            .values()
+            .stream()
+            .filter(clazz::isInstance)
+            .findFirst();
+  }
+  {{/java8}}
+
+  private HttpBasicAuth getHttpBasicAuth() {
+      {{#java8}}
+      return getAuthenticationByType(HttpBasicAuth.class)
+            .orElseThrow(() -> new RuntimeException("No HTTP basic authentication configured!"));
+      {{/java8}}
+      {{^java8}}
+      for (Authentication auth : authentications.values()) {
+          if (auth instanceof HttpBasicAuth) {
+              return (HttpBasicAuth) auth;
+          }
+      }
+      throw new RuntimeException("No HTTP basic authentication configured!");
+      {{/java8}}
+  }
+
+  private ApiKeyAuth getApiKeyAuth() {
+      {{#java8}}
+      return getAuthenticationByType(ApiKeyAuth.class)
+            .orElseThrow(() -> new RuntimeException("No API key authentication configured!"));
+      {{/java8}}
+      {{^java8}}
+      for (Authentication auth : authentications.values()) {
+          if (auth instanceof ApiKeyAuth) {
+              return (ApiKeyAuth) auth;
+          }
+      }
+      throw new RuntimeException("No API key authentication configured!");
+      {{/java8}}
+  }
+
+  private OAuth getOAuth() {
+      {{#java8}}
+      return getAuthenticationByType(OAuth.class)
+            .orElseThrow(() -> new RuntimeException("No OAuth2 authentication configured!"));
+      {{/java8}}
+      {{^java8}}
+      for (Authentication auth : authentications.values()) {
+          if (auth instanceof OAuth) {
+              return (OAuth) auth;
+          }
+      }
+      {{/java8}}
+      throw new RuntimeException("No OAuth2 authentication configured!");
+  }
+
   /**
    * Helper method to set username for the first HTTP basic authentication.
    * @param username Username
    */
   public void setUsername(String username) {
-    for (Authentication auth : authentications.values()) {
-      if (auth instanceof HttpBasicAuth) {
-        ((HttpBasicAuth) auth).setUsername(username);
-        return;
-      }
-    }
-    throw new RuntimeException("No HTTP basic authentication configured!");
+      getHttpBasicAuth()
+          .setUsername(username);
   }
 
   /**
@@ -208,13 +259,8 @@ public class ApiClient {
    * @param password Password
    */
   public void setPassword(String password) {
-    for (Authentication auth : authentications.values()) {
-      if (auth instanceof HttpBasicAuth) {
-        ((HttpBasicAuth) auth).setPassword(password);
-        return;
-      }
-    }
-    throw new RuntimeException("No HTTP basic authentication configured!");
+      getHttpBasicAuth()
+          .setPassword(username);
   }
 
   /**
@@ -222,13 +268,8 @@ public class ApiClient {
    * @param apiKey API key
    */
   public void setApiKey(String apiKey) {
-    for (Authentication auth : authentications.values()) {
-      if (auth instanceof ApiKeyAuth) {
-        ((ApiKeyAuth) auth).setApiKey(apiKey);
-        return;
-      }
-    }
-    throw new RuntimeException("No API key authentication configured!");
+      getApiKeyAuth()
+          .setApiKey(apiKey);
   }
 
   /**
@@ -236,13 +277,8 @@ public class ApiClient {
    * @param apiKeyPrefix API key prefix
    */
   public void setApiKeyPrefix(String apiKeyPrefix) {
-    for (Authentication auth : authentications.values()) {
-      if (auth instanceof ApiKeyAuth) {
-        ((ApiKeyAuth) auth).setApiKeyPrefix(apiKeyPrefix);
-        return;
-      }
-    }
-    throw new RuntimeException("No API key authentication configured!");
+      getApiKeyAuth()
+          .setApiKeyPrefix(apiKeyPrefix);
   }
 
   /**
@@ -250,13 +286,8 @@ public class ApiClient {
    * @param accessToken Access token
    */
   public void setAccessToken(String accessToken) {
-    for (Authentication auth : authentications.values()) {
-      if (auth instanceof OAuth) {
-        ((OAuth) auth).setAccessToken(accessToken);
-        return;
-      }
-    }
-    throw new RuntimeException("No OAuth2 authentication configured!");
+      getOAuth()
+          .setAccessToken(accessToken);
   }
 
   /**
