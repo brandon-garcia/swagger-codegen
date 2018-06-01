@@ -1168,7 +1168,6 @@ public class ApiClient {
     }
 
     private KeyStore getKeyStore() throws GeneralSecurityException {
-        char[] password = null; // Any password will work.
         CertificateFactory certificateFactory = CertificateFactory.getInstance("X.509");
         Collection<? extends Certificate> certificates = certificateFactory.generateCertificates(sslCaCert);
         if (certificates.isEmpty()) {
@@ -1178,7 +1177,7 @@ public class ApiClient {
         KeyStore caKeyStore = KeyStore.getInstance(KeyStore.getDefaultType());
 
         try {
-            caKeyStore.load(null, password);
+            caKeyStore.load(null, null);
         } catch (IOException e) {
             throw new AssertionError(e);
         }
