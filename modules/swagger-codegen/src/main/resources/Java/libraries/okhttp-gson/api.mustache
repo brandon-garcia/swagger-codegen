@@ -213,7 +213,7 @@ public class {{classname}} {
     {{/isDeprecated}}
     public {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{operationId}}({{#allParams}}{{{dataType}}} {{paramName}}{{#hasMore}}, {{/hasMore}}{{/allParams}}) throws ApiException {
         {{#returnType}}return {{/returnType}}{{operationId}}WithHttpInfo({{#allParams}}{{paramName}}{{#hasMore}}, {{/hasMore}}{{/allParams}}){{^returnType}};{{/returnType}}
-        {{#returnType}}    .getData();{{/returnType}}
+        {{#returnType}}        .getData();{{/returnType}}
     }
 
     /**
