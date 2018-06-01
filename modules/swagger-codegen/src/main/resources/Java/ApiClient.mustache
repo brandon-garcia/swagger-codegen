@@ -242,8 +242,8 @@ public class ApiClient {
               return (OAuth) auth;
           }
       }
-      {{/java8}}
       throw new RuntimeException("No OAuth2 authentication configured!");
+      {{/java8}}
   }
 
   /**
