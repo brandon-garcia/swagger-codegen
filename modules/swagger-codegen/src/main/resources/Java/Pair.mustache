@@ -2,9 +2,15 @@
 
 package {{invokerPackage}};
 
+import lombok.Getter;
+import lombok.Setter;
+
 {{>generatedAnnotation}}
 public class Pair {
+    @Getter
     private String name = "";
+
+    @Getter
     private String value = "";
 
     public Pair (String name, String value) {
@@ -24,14 +30,6 @@ public class Pair {
             return;
         }
         this.value = value;
-    }
-
-    public String getName() {
-        return this.name;
-    }
-
-    public String getValue() {
-        return this.value;
     }
 
     private boolean isValidString(String arg) {

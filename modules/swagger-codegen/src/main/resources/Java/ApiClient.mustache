@@ -49,6 +49,8 @@ import java.io.UnsupportedEncodingException;
 
 import java.text.DateFormat;
 
+import lombok.Getter;
+
 import {{invokerPackage}}.auth.Authentication;
 import {{invokerPackage}}.auth.HttpBasicAuth;
 import {{invokerPackage}}.auth.ApiKeyAuth;
@@ -57,16 +59,42 @@ import {{invokerPackage}}.auth.OAuth;
 {{>generatedAnnotation}}
 public class ApiClient {
   private Map<String, String> defaultHeaderMap = new HashMap<>();
+
+  @Getter
   private String basePath = "{{{basePath}}}";
+
   private boolean debugging = false;
   private int connectionTimeout = 0;
 
+  @Getter
   private Client httpClient;
+
+  /**
+   * the object mapper used for JSON serialization/deserialization.
+   * <p>
+   * Note: If you make changes to the object mapper, remember to set it back via
+   * <code>setObjectMapper</code> in order to trigger HTTP client rebuilding.
+   * </p>
+   */
+  @Getter
   private ObjectMapper objectMapper;
 
+  /*
+   * map (key: authentication name, value: authentication).
+   */
+  @Getter
   private Map<String, Authentication> authentications;
 
+  /**
+   * the status code of the previous request
+   */
+  @Getter
   private int statusCode;
+
+  /**
+   * the response headers of the previous request
+   */
+  @Getter
   private Map<String, List<String>> responseHeaders;
 
   private DateFormat dateFormat;
@@ -134,18 +162,6 @@ public class ApiClient {
     return this;
   }
 
-  /**
-   * Returns the current object mapper used for JSON serialization/deserialization.
-   * <p>
-   * Note: If you make changes to the object mapper, remember to set it back via
-   * <code>setObjectMapper</code> in order to trigger HTTP client rebuilding.
-   * </p>
-   * @return Object mapper
-   */
-  public ObjectMapper getObjectMapper() {
-    return objectMapper;
-  }
-
   public ApiClient setObjectMapper(ObjectMapper objectMapper) {
     this.objectMapper = objectMapper;
     // Need to rebuild the Client as it depends on object mapper.
@@ -153,46 +169,14 @@ public class ApiClient {
     return this;
   }
 
-  public Client getHttpClient() {
-    return httpClient;
-  }
-
   public ApiClient setHttpClient(Client httpClient) {
     this.httpClient = httpClient;
     return this;
   }
 
-  public String getBasePath() {
-    return basePath;
-  }
-
   public ApiClient setBasePath(String basePath) {
     this.basePath = basePath;
     return this;
-  }
-
-  /**
-   * Gets the status code of the previous request
-   * @return Status code
-   */
-  public int getStatusCode() {
-    return statusCode;
-  }
-
-  /**
-   * Gets the response headers of the previous request
-   * @return Response headers
-   */
-  public Map<String, List<String>> getResponseHeaders() {
-    return responseHeaders;
-  }
-
-  /**
-   * Get authentications (key: authentication name, value: authentication).
-   * @return Map of authentication
-   */
-  public Map<String, Authentication> getAuthentications() {
-    return authentications;
   }
 
   /**

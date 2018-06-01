@@ -45,8 +45,13 @@ import java.util.Date;
 import java.util.Map;
 import java.util.HashMap;
 
+import lombok.Getter;
+
 public class JSON {
+
+    @Getter
     private Gson gson;
+
     private boolean isLenientOnJson = false;
     private DateTypeAdapter dateTypeAdapter = new DateTypeAdapter();
     private SqlDateTypeAdapter sqlDateTypeAdapter = new SqlDateTypeAdapter();
@@ -111,15 +116,6 @@ public class JSON {
             {{/jsr310}}
             .registerTypeAdapter(byte[].class, byteArrayAdapter)
             .create();
-    }
-
-    /**
-     * Get Gson.
-     *
-     * @return Gson
-     */
-    public Gson getGson() {
-        return gson;
     }
 
     /**

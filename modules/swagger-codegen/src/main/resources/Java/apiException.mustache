@@ -5,10 +5,20 @@ package {{invokerPackage}};
 import java.util.Map;
 import java.util.List;
 
+import lombok.Getter;
+
 {{>generatedAnnotation}}
 public class ApiException extends{{#useRuntimeException}} RuntimeException {{/useRuntimeException}}{{^useRuntimeException}} Exception {{/useRuntimeException}}{
+    /**
+     * The HTTP Status Code
+     */
+    @Getter
     private int code = 0;
+
+    @Getter
     private Map<String, List<String>> responseHeaders = null;
+
+    @Getter
     private String responseBody = null;
 
     public ApiException() {}
@@ -49,32 +59,5 @@ public class ApiException extends{{#useRuntimeException}} RuntimeException {{/us
         this(code, message);
         this.responseHeaders = responseHeaders;
         this.responseBody = responseBody;
-    }
-
-    /**
-     * Get the HTTP status code.
-     *
-     * @return HTTP status code
-     */
-    public int getCode() {
-        return code;
-    }
-
-    /**
-     * Get the HTTP response headers.
-     *
-     * @return A map of list of string
-     */
-    public Map<String, List<String>> getResponseHeaders() {
-        return responseHeaders;
-    }
-
-    /**
-     * Get the HTTP response body.
-     *
-     * @return Response body in the form of string
-     */
-    public String getResponseBody() {
-        return responseBody;
     }
 }

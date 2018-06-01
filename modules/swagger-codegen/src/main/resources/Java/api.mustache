@@ -20,9 +20,14 @@ import java.util.List;
 import java.util.Map;
 {{/fullJavaUtil}}
 
+import lombok.experimental.Accessors;
+import lombok.Getter;
+import lombok.Setter;
+
 {{>generatedAnnotation}}
 {{#operations}}
 public class {{classname}} {
+  @Accessors(prefix="{{localVariablePrefix}}") @Getter @Setter
   private ApiClient {{localVariablePrefix}}apiClient;
 
   public {{classname}}() {
@@ -30,14 +35,6 @@ public class {{classname}} {
   }
 
   public {{classname}}(ApiClient apiClient) {
-    this.{{localVariablePrefix}}apiClient = apiClient;
-  }
-
-  public ApiClient getApiClient() {
-    return {{localVariablePrefix}}apiClient;
-  }
-
-  public void setApiClient(ApiClient apiClient) {
     this.{{localVariablePrefix}}apiClient = apiClient;
   }
 
