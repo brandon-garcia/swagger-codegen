@@ -1227,10 +1227,15 @@ public class ApiClient {
     private HostnameVerifier getHostnameVerifier() {
         HostnameVerifier verifier = null;
         if (!verifyingSsl) {
+            {{#java8}}
+            verifier = (hostname, session) -> true;
+            {{/java8}}
+            {{^java8}}
             verifier = new HostnameVerifier() {
                 @Override
                 public boolean verify(String hostname, SSLSession session) { return true; }
             };
+            {{/java8}}
         }
         return verifier;
     }

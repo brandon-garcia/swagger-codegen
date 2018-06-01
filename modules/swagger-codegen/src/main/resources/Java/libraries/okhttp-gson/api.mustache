@@ -125,6 +125,16 @@ public class {{classname}} {
         {{localVariablePrefix}}localVarHeaderParams.put("Content-Type", {{localVariablePrefix}}localVarContentType);
 
         if(progressListener != null) {
+            {{#java8}}
+            apiClient.getHttpClient().networkInterceptors().add(chain -> {
+                com.squareup.okhttp.Response originalResponse = chain.proceed(chain.request());
+                return originalResponse
+                    .newBuilder()
+                    .body(new ProgressResponseBody(originalResponse.body(), progressListener))
+                    .build();
+            });
+            {{/java8}}
+            {{^java8}}
             apiClient.getHttpClient().networkInterceptors().add(new com.squareup.okhttp.Interceptor() {
                 @Override
                 public com.squareup.okhttp.Response intercept(com.squareup.okhttp.Interceptor.Chain chain) throws IOException {
@@ -134,6 +144,7 @@ public class {{classname}} {
                     .build();
                 }
             });
+            {{/java8}}
         }
 
         String[] {{localVariablePrefix}}localVarAuthNames = new String[] { {{#authMethods}}"{{name}}"{{#hasMore}}, {{/hasMore}}{{/authMethods}} };
