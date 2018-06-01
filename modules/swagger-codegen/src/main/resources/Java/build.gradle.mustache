@@ -102,7 +102,7 @@ if(hasProperty('target') && target == 'android') {
        main = System.getProperty('mainClass')
        classpath = sourceSets.main.runtimeClasspath
     }
-    
+
     task sourcesJar(type: Jar, dependsOn: classes) {
         classifier = 'sources'
         from sourceSets.main.allSource
@@ -125,9 +125,11 @@ ext {
     jersey_version = "1.19.4"
     jodatime_version = "2.9.9"
     junit_version = "4.12"
+    lombok_version = "1.16.22"
 }
 
 dependencies {
+    compileOnly "org.projectlombok:lombok:$lombok_version"
     compile "io.swagger:swagger-annotations:$swagger_annotations_version"
     compile "com.sun.jersey:jersey-client:$jersey_version"
     compile "com.sun.jersey.contribs:jersey-multipart:$jersey_version"
