@@ -1225,7 +1225,7 @@ public class ApiClient {
     }
 
     private HostnameVerifier getHostnameVerifier() {
-        HostnameVerifier verifier;
+        HostnameVerifier verifier = null;
         if (!verifyingSsl) {
             verifier = new HostnameVerifier() {
                 @Override
