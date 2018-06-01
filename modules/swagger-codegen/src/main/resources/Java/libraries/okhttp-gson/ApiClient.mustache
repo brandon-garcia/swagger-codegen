@@ -542,7 +542,9 @@ public class ApiClient {
         List<Pair> params = new ArrayList<Pair>();
 
         // preconditions
-        if (name == null || name.isEmpty() || value == null || value instanceof Collection) return params;
+        if (name == null || name.isEmpty() || value == null || value instanceof Collection) {
+            return params;
+        }
 
         params.add(new Pair(name, parameterToString(value)));
         return params;
@@ -824,14 +826,16 @@ public class ApiClient {
                 suffix = filename.substring(pos);
             }
             // File.createTempFile requires the prefix to be at least three characters long
-            if (prefix.length() < 3)
+            if (prefix.length() < 3) {
                 prefix = "download-";
+            }
         }
 
-        if (tempFolderPath == null)
+        if (tempFolderPath == null) {
             return File.createTempFile(prefix, suffix);
-        else
+        } else {
             return File.createTempFile(prefix, suffix, new File(tempFolderPath));
+        }
     }
 
     /**
@@ -1104,7 +1108,9 @@ public class ApiClient {
     public void updateParamsForAuth(String[] authNames, List<Pair> queryParams, Map<String, String> headerParams) {
         for (String authName : authNames) {
             Authentication auth = authentications.get(authName);
-            if (auth == null) throw new RuntimeException("Authentication undefined: " + authName);
+            if (auth == null) {
+                throw new RuntimeException("Authentication undefined: " + authName);
+            }
             auth.applyToParams(queryParams, headerParams);
         }
     }
@@ -1161,67 +1167,84 @@ public class ApiClient {
         }
     }
 
+    private KeyStore getKeyStore() throws GeneralSecurityException {
+        char[] password = null; // Any password will work.
+        CertificateFactory certificateFactory = CertificateFactory.getInstance("X.509");
+        Collection<? extends Certificate> certificates = certificateFactory.generateCertificates(sslCaCert);
+        if (certificates.isEmpty()) {
+            throw new IllegalArgumentException("expected non-empty set of trusted certificates");
+        }
+
+        KeyStore caKeyStore = KeyStore.getInstance(KeyStore.getDefaultType());
+
+        try {
+            caKeyStore.load(null, password);
+        } catch (IOException e) {
+            throw new AssertionError(e);
+        }
+
+        int index = 0;
+        for (Certificate certificate : certificates) {
+            String certificateAlias = "ca" + Integer.toString(index++);
+            caKeyStore.setCertificateEntry(certificateAlias, certificate);
+        }
+
+        return caKeyStore;
+    }
+
+    private TrustManager[] getTrustManagers() throws GeneralSecurityException {
+        TrustManager[] trustManagers = null;
+        if (!verifyingSsl) {
+            TrustManager trustAll = new X509TrustManager() {
+                @Override
+                public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {}
+
+                @Override
+                public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {}
+
+                @Override
+                public X509Certificate[] getAcceptedIssuers() { return null; }
+            };
+            trustManagers = new TrustManager[]{ trustAll };
+        } else if (sslCaCert != null) {
+            TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+            trustManagerFactory.init(this.getKeyStore());
+            trustManagers = trustManagerFactory.getTrustManagers();
+        }
+        return trustManagers;
+    }
+
+    private SSLSocketFactory getSslSocketFactory() throws GeneralSecurityException {
+        TrustManager[] trustManagers = this.getTrustManagers();
+        if (keyManagers != null || trustManagers != null) {
+            SSLContext sslContext = SSLContext.getInstance("TLS");
+            sslContext.init(keyManagers, trustManagers, new SecureRandom());
+            return sslContext.getSocketFactory();
+        }
+        return null;
+    }
+
+    private HostnameVerifier getHostnameVerifier() {
+        HostnameVerifier verifier;
+        if (!verifyingSsl) {
+            verifier = new HostnameVerifier() {
+                @Override
+                public boolean verify(String hostname, SSLSession session) { return true; }
+            };
+        }
+        return verifier;
+    }
+
     /**
      * Apply SSL related settings to httpClient according to the current values of
      * verifyingSsl and sslCaCert.
      */
     private void applySslSettings() {
         try {
-            TrustManager[] trustManagers = null;
-            HostnameVerifier hostnameVerifier = null;
-            if (!verifyingSsl) {
-                TrustManager trustAll = new X509TrustManager() {
-                    @Override
-                    public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {}
-                    @Override
-                    public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {}
-                    @Override
-                    public X509Certificate[] getAcceptedIssuers() { return null; }
-                };
-                SSLContext sslContext = SSLContext.getInstance("TLS");
-                trustManagers = new TrustManager[]{ trustAll };
-                hostnameVerifier = new HostnameVerifier() {
-                    @Override
-                    public boolean verify(String hostname, SSLSession session) { return true; }
-                };
-            } else if (sslCaCert != null) {
-                char[] password = null; // Any password will work.
-                CertificateFactory certificateFactory = CertificateFactory.getInstance("X.509");
-                Collection<? extends Certificate> certificates = certificateFactory.generateCertificates(sslCaCert);
-                if (certificates.isEmpty()) {
-                    throw new IllegalArgumentException("expected non-empty set of trusted certificates");
-                }
-                KeyStore caKeyStore = newEmptyKeyStore(password);
-                int index = 0;
-                for (Certificate certificate : certificates) {
-                    String certificateAlias = "ca" + Integer.toString(index++);
-                    caKeyStore.setCertificateEntry(certificateAlias, certificate);
-                }
-                TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
-                trustManagerFactory.init(caKeyStore);
-                trustManagers = trustManagerFactory.getTrustManagers();
-            }
-
-            if (keyManagers != null || trustManagers != null) {
-                SSLContext sslContext = SSLContext.getInstance("TLS");
-                sslContext.init(keyManagers, trustManagers, new SecureRandom());
-                httpClient.setSslSocketFactory(sslContext.getSocketFactory());
-            } else {
-                httpClient.setSslSocketFactory(null);
-            }
-            httpClient.setHostnameVerifier(hostnameVerifier);
+            httpClient.setSslSocketFactory(this.getSslSocketFactory());
+            httpClient.setHostnameVerifier(this.getHostnameVerifier());
         } catch (GeneralSecurityException e) {
             throw new RuntimeException(e);
-        }
-    }
-
-    private KeyStore newEmptyKeyStore(char[] password) throws GeneralSecurityException {
-        try {
-            KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
-            keyStore.load(null, password);
-            return keyStore;
-        } catch (IOException e) {
-            throw new AssertionError(e);
         }
     }
 }
