@@ -275,12 +275,13 @@ public class ApiClient {
     }
 
     {{#java8}}
-    private Optional<Authentication> getAuthenticationByType(Class clazz) {
+    private Optional<T> getAuthenticationByType(Class<T> clazz) {
         return authentications
             .values()
             .stream()
             .filter(clazz::isInstance)
-            .findFirst();
+            .findFirst()
+            .map(clazz::cast);
     }
     {{/java8}}
 
