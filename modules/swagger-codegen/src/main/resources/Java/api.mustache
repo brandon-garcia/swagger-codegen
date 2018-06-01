@@ -85,13 +85,13 @@ public class {{classname}} {
     {{localVariablePrefix}}{{#collectionFormat}}localVarCollectionQueryParams.addAll({{localVariablePrefix}}apiClient.parameterToPairs("{{{collectionFormat}}}", {{/collectionFormat}}{{^collectionFormat}}localVarQueryParams.addAll({{localVariablePrefix}}apiClient.parameterToPair({{/collectionFormat}}"{{baseName}}", {{paramName}}));
     {{/queryParams}}
 
-    {{#headerParams}}if ({{paramName}} != null)
+    {{#headerParams}}if ({{paramName}} != null) {
       {{localVariablePrefix}}localVarHeaderParams.put("{{baseName}}", {{localVariablePrefix}}apiClient.parameterToString({{paramName}}));
-    {{/headerParams}}
+    }{{/headerParams}}
 
-    {{#formParams}}if ({{paramName}} != null)
+    {{#formParams}}if ({{paramName}} != null) {
       {{localVariablePrefix}}localVarFormParams.put("{{baseName}}", {{paramName}});
-    {{/formParams}}
+    }{{/formParams}}
 
     final String[] {{localVariablePrefix}}localVarAccepts = {
       {{#produces}}"{{{mediaType}}}"{{#hasMore}}, {{/hasMore}}{{/produces}}
