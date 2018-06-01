@@ -66,23 +66,23 @@ public class JSON {
     private ByteArrayAdapter byteArrayAdapter = new ByteArrayAdapter();
 
     public static GsonBuilder createGson() {
-        GsonFireBuilder fireBuilder = new GsonFireBuilder(){{^parent}};{{/parent}}
+        return new GsonFireBuilder()
         {{#parent}}
-          .registerTypeSelector({{classname}}.class, new TypeSelector() {
-            @Override
-            public Class getClassForElement(JsonElement readElement) {
-                Map classByDiscriminatorValue = new HashMap();
-                {{#children}}
-                classByDiscriminatorValue.put("{{name}}".toUpperCase(), {{classname}}.class);
-                {{/children}}
-                classByDiscriminatorValue.put("{{classname}}".toUpperCase(), {{classname}}.class);
-                return getClassByDiscriminator(
-                                           classByDiscriminatorValue,
-                                           getDiscriminatorValue(readElement, "{{discriminator}}"));
-            }
-          });
+                .registerTypeSelector({{classname}}.class, new TypeSelector() {
+                    @Override
+                    public Class getClassForElement(JsonElement readElement) {
+                        Map classByDiscriminatorValue = new HashMap();
+                        {{#children}}
+                        classByDiscriminatorValue.put("{{name}}".toUpperCase(), {{classname}}.class);
+                        {{/children}}
+                        classByDiscriminatorValue.put("{{classname}}".toUpperCase(), {{classname}}.class);
+                        return getClassByDiscriminator(
+                                                   classByDiscriminatorValue,
+                                                   getDiscriminatorValue(readElement, "{{discriminator}}"));
+                    }
+                })
         {{/parent}}
-        return fireBuilder.createGsonBuilder();
+                .createGsonBuilder();
     }
 
     private static String getDiscriminatorValue(JsonElement readElement, String discriminatorField) {
