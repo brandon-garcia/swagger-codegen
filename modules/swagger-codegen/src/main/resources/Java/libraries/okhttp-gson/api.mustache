@@ -195,7 +195,7 @@ public class {{classname}} {
         }
         {{/required}}{{/allParams}}
 
-        com.squareup.okhttp.Call {{localVariablePrefix}}call = {{operationId}}Call({{#allParams}}{{paramName}}, {{/allParams}}progressListener, progressRequestListener);
+        com.squareup.okhttp.Call {{localVariablePrefix}}call = {{operationId}}Call({{#allParams}}{{paramName}}, {{/allParams}}null, null);
         {{#returnType}}Type {{localVariablePrefix}}localVarReturnType = new TypeToken<{{{returnType}}}>(){}.getType();
         return {{localVariablePrefix}}apiClient.execute({{localVariablePrefix}}call, {{localVariablePrefix}}localVarReturnType);{{/returnType}}{{^returnType}}return {{localVariablePrefix}}apiClient.execute({{localVariablePrefix}}call);{{/returnType}}
 
