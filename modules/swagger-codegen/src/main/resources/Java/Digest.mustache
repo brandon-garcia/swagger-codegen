@@ -1,0 +1,31 @@
+{{>licenseInfo}}
+
+package {{invokerPackage}};
+
+{{>generatedAnnotation}}
+public final class Digest {
+    private static final String ALG_HMAC_SHA256;
+
+    private static final String ERROR_UNSUPPORTED = "algorithm %s not supported by underlying implementation";
+
+    private Digest() {
+    }
+
+    public static byte[] hmacSHA256(final byte[] secret, final byte[] msg) {
+        return hmac(ALG_HMAC_SHA256, secret, msg);
+    }
+
+    public static byte[] hmac(final String algorithm, final byte[] secret, final byte[] msg) {
+        final Key signingKey = new SecretKeySpec(secret, algorithm);
+        final Mac digest;
+
+        try {
+            digest = Mac.getInstance(algorithm);
+            digest.init(signingKey);
+        } catch (NoSuchAlgorithmException|InvalidKeyException e) {
+            throw new IllegalStateException(String.format(ERROR_UNSUPPORTED, algorithm, e);
+        }
+
+        return digest.doFinal(msg);
+    }
+}
