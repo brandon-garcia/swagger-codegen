@@ -12,7 +12,7 @@
       {{/enumVars}}
     {{/allowableValues}}
 
-    private {{{datatype}}} value;
+    private final {{{datatype}}} value;
 
     {{#datatypeWithEnum}}{{{.}}}{{/datatypeWithEnum}}{{^datatypeWithEnum}}{{classname}}{{/datatypeWithEnum}}({{{datatype}}} value) {
       this.value = value;
