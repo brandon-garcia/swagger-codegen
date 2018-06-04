@@ -134,9 +134,8 @@ public class ApiClient {
         return defaultHeaders;
     }
 
-    public ApiClient addDefaultHeader(String key, String value) {
+    public void addDefaultHeader(String key, String value) {
         defaultHeaders.add(key, value);
-        return this;
     }
 
     /**

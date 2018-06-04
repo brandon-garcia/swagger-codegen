@@ -337,11 +337,9 @@ public class ApiClient {
      * Set the User-Agent header's value (by adding to the default header map).
      *
      * @param userAgent HTTP request's user agent
-     * @return ApiClient
      */
-    public ApiClient setUserAgent(String userAgent) {
+    public void setUserAgent(String userAgent) {
         addDefaultHeader("User-Agent", userAgent);
-        return this;
     }
 
     /**
@@ -349,11 +347,9 @@ public class ApiClient {
      *
      * @param key The header's key
      * @param value The header's value
-     * @return ApiClient
      */
-    public ApiClient addDefaultHeader(String key, String value) {
+    public void addDefaultHeader(String key, String value) {
         defaultHeaderMap.put(key, value);
-        return this;
     }
 
     /**

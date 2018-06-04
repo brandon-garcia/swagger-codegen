@@ -207,9 +207,8 @@ public class ApiClient {
   /**
    * Set the User-Agent header's value (by adding to the default header map).
    */
-  public ApiClient setUserAgent(String userAgent) {
+  public void setUserAgent(String userAgent) {
     addDefaultHeader("User-Agent", userAgent);
-    return this;
   }
 
   /**
@@ -218,9 +217,8 @@ public class ApiClient {
    * @param key The header's key
    * @param value The header's value
    */
-  public ApiClient addDefaultHeader(String key, String value) {
+  public void addDefaultHeader(String key, String value) {
     defaultHeaderMap.put(key, value);
-    return this;
   }
 
   /**
@@ -446,7 +444,7 @@ public class ApiClient {
   public Entity<?> serialize(Object obj, Map<String, Object> formParams, String contentType) throws ApiException {
     Entity<?> entity = null;
     if (contentType.startsWith("multipart/form-data")) {
-      MultipartFormDataOutput multipart = new MultipartFormDataOutput();  
+      MultipartFormDataOutput multipart = new MultipartFormDataOutput();
       //MultiPart multiPart = new MultiPart();
       for (Entry<String, Object> param: formParams.entrySet()) {
         if (param.getValue() instanceof File) {

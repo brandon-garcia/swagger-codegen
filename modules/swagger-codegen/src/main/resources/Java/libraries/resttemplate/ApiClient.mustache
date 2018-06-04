@@ -253,11 +253,9 @@ public class ApiClient {
     /**
      * Set the User-Agent header's value (by adding to the default header map).
      * @param userAgent the user agent string
-     * @return ApiClient this client
      */
-    public ApiClient setUserAgent(String userAgent) {
+    public void setUserAgent(String userAgent) {
         addDefaultHeader("User-Agent", userAgent);
-        return this;
     }
 
     /**
@@ -265,16 +263,14 @@ public class ApiClient {
      *
      * @param name The header's name
      * @param value The header's value
-     * @return ApiClient this client
      */
-    public ApiClient addDefaultHeader(String name, String value) {
+    public void addDefaultHeader(String name, String value) {
         if (defaultHeaders.containsKey(name)) {
             defaultHeaders.remove(name);
         }
         defaultHeaders.add(name, value);
-        return this;
     }
-    
+
     public void setDebugging(boolean debugging) {
         List<ClientHttpRequestInterceptor> currentInterceptors = this.restTemplate.getInterceptors();
         if(debugging) {
