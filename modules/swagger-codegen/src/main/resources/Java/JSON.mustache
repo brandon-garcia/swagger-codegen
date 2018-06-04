@@ -66,7 +66,6 @@ public class JSON {
     private final OffsetDateTimeTypeAdapter offsetDateTimeTypeAdapter = new OffsetDateTimeTypeAdapter();
     private final LocalDateTypeAdapter localDateTypeAdapter = new LocalDateTypeAdapter();
     {{/jsr310}}
-    private final ByteArrayAdapter byteArrayAdapter = new ByteArrayAdapter();
 
     public static GsonBuilder createGson() {
         return new GsonFireBuilder()
@@ -116,7 +115,7 @@ public class JSON {
             .registerTypeAdapter(OffsetDateTime.class, offsetDateTimeTypeAdapter)
             .registerTypeAdapter(LocalDate.class, localDateTypeAdapter)
             {{/jsr310}}
-            .registerTypeAdapter(byte[].class, byteArrayAdapter)
+            .registerTypeAdapter(byte[].class, new ByteArrayAdapter())
             .create();
     }
 
