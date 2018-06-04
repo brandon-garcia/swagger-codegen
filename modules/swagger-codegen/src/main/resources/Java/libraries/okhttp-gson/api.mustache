@@ -2,21 +2,15 @@
 
 package {{package}};
 
-import {{invokerPackage}}.ApiCallback;
 import {{invokerPackage}}.ApiClient;
 import {{invokerPackage}}.ApiException;
-import {{invokerPackage}}.ApiResponse;
 import {{invokerPackage}}.Configuration;
 import {{invokerPackage}}.Pair;
-import {{invokerPackage}}.ProgressRequestBody;
-import {{invokerPackage}}.ProgressResponseBody;
 {{#performBeanValidation}}
 import {{invokerPackage}}.BeanValidationException;
 {{/performBeanValidation}}
 
 import com.google.gson.reflect.TypeToken;
-
-import java.io.IOException;
 
 {{#useBeanValidation}}
 import javax.validation.constraints.*;
