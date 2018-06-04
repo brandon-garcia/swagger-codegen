@@ -49,10 +49,12 @@ import lombok.Getter;
 
 public class JSON {
 
-    @Getter
+    @Getter @Setter
     private Gson gson;
 
+    @Setter
     private boolean isLenientOnJson = false;
+
     private DateTypeAdapter dateTypeAdapter = new DateTypeAdapter();
     private SqlDateTypeAdapter sqlDateTypeAdapter = new SqlDateTypeAdapter();
     {{#joda}}
@@ -115,22 +117,6 @@ public class JSON {
             {{/jsr310}}
             .registerTypeAdapter(byte[].class, byteArrayAdapter)
             .create();
-    }
-
-    /**
-     * Set Gson.
-     *
-     * @param gson Gson
-     * @return JSON
-     */
-    public JSON setGson(Gson gson) {
-        this.gson = gson;
-        return this;
-    }
-
-    public JSON setLenientOnJson(boolean lenientOnJson) {
-        isLenientOnJson = lenientOnJson;
-        return this;
     }
 
     /**

@@ -61,17 +61,26 @@ import {{invokerPackage}}.auth.OAuth;
 public class ApiClient {
   private Map<String, String> defaultHeaderMap = new HashMap<>();
 
-  @Getter
+  @Getter @Setter
   private String basePath = "{{{basePath}}}";
 
-  private boolean debugging = false;
-  private int connectionTimeout = 0;
-
+  /**
+   * Whether debugging is enabled for this API client.
+   */
   @Getter
+  private boolean debugging = false;
+
+  /**
+   * Connect timeout (in milliseconds).
+   */
+  @Getter
+  private int connectTimeout = 0;
+
+  @Getter @Setter
   private Client httpClient;
 
   /**
-   * the object mapper used for JSON serialization/deserialization.
+   * The object mapper used for JSON serialization/deserialization.
    * <p>
    * Note: If you make changes to the object mapper, remember to set it back via
    * <code>setObjectMapper</code> in order to trigger HTTP client rebuilding.
@@ -87,17 +96,21 @@ public class ApiClient {
   private Map<String, Authentication> authentications;
 
   /**
-   * the status code of the previous request
+   * The status code of the previous request
    */
   @Getter
   private int statusCode;
 
   /**
-   * the response headers of the previous request
+   * The response headers of the previous request
    */
   @Getter
   private Map<String, List<String>> responseHeaders;
 
+  /**
+   * The date format used to parse/format date parameters.
+   */
+  @Getter
   private DateFormat dateFormat;
 
   public ApiClient() {
@@ -167,16 +180,6 @@ public class ApiClient {
     this.objectMapper = objectMapper;
     // Need to rebuild the Client as it depends on object mapper.
     rebuildHttpClient();
-    return this;
-  }
-
-  public ApiClient setHttpClient(Client httpClient) {
-    this.httpClient = httpClient;
-    return this;
-  }
-
-  public ApiClient setBasePath(String basePath) {
-    this.basePath = basePath;
     return this;
   }
 
@@ -314,14 +317,6 @@ public class ApiClient {
   }
 
   /**
-   * Check that whether debugging is enabled for this API client.
-   * @return True if debugging is on
-   */
-  public boolean isDebugging() {
-    return debugging;
-  }
-
-  /**
    * Enable/disable debugging for this API client.
    *
    * @param debugging To enable (true) or disable (false) debugging
@@ -335,33 +330,17 @@ public class ApiClient {
   }
 
   /**
-   * Connect timeout (in milliseconds).
-   * @return Connection timeout
-   */
-  public int getConnectTimeout() {
-    return connectionTimeout;
-  }
-
-  /**
    * Set the connect timeout (in milliseconds).
    * A value of 0 means no timeout, otherwise values must be between 1 and
    * {@link Integer#MAX_VALUE}.
-   * @param connectionTimeout Connection timeout in milliseconds
+   * @param connectTimeout Connection timeout in milliseconds
    * @return API client
    */
-   public ApiClient setConnectTimeout(int connectionTimeout) {
-     this.connectionTimeout = connectionTimeout;
-     httpClient.setConnectTimeout(connectionTimeout);
+   public ApiClient setConnectTimeout(int connectTimeout) {
+     this.connectTimeout = connectTimeout;
+     httpClient.setConnectTimeout(connectTimeout);
      return this;
    }
-
-  /**
-   * Get the date format used to parse/format date parameters.
-   * @return Date format
-   */
-  public DateFormat getDateFormat() {
-    return dateFormat;
-  }
 
   /**
    * Set the date format used to parse/format date parameters.
