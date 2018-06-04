@@ -34,6 +34,12 @@ public class CustomInstantDeserializer<T extends Temporal>
 
   public static final CustomInstantDeserializer<Instant> INSTANT = new CustomInstantDeserializer<Instant>(
       Instant.class, DateTimeFormatter.ISO_INSTANT,
+      {{#java8}}
+      (TemporalAccessor temporalAccessor) -> Instant.from(temporalAccessor),
+      (FromIntegerArguments a)            -> Instant.ofEpochMilli(a.value),
+      (FromDecimalArguments a)            -> Instant.ofEpochSecond(a.integer, a.fraction),
+      {{/java8}}
+      {{^java8}}
       new Function<TemporalAccessor, Instant>() {
         @Override
         public Instant apply(TemporalAccessor temporalAccessor) {
@@ -52,11 +58,19 @@ public class CustomInstantDeserializer<T extends Temporal>
           return Instant.ofEpochSecond(a.integer, a.fraction);
         }
       },
+      {{/java8}}
       null
   );
 
   public static final CustomInstantDeserializer<OffsetDateTime> OFFSET_DATE_TIME = new CustomInstantDeserializer<OffsetDateTime>(
       OffsetDateTime.class, DateTimeFormatter.ISO_OFFSET_DATE_TIME,
+      {{#java8}}
+      (TemporalAccessor temporalAccessor) -> OffsetDateTime.from(temporalAccessor),
+      (FromIntegerArguments a)            -> OffsetDateTime.ofInstant(Instant.ofEpochMilli(a.value), a.zoneId),
+      (FromDecimalArguments a)            -> OffsetDateTime.ofInstant(Instant.ofEpochSecond(a.integer, a.fraction), a.zoneId),
+      (OffsetDateTime d, ZoneId z)        -> d.withOffsetSameInstant(z.getRules().getOffset(d.toLocalDateTime())),
+      {{/java8}}
+      {{^java8}}
       new Function<TemporalAccessor, OffsetDateTime>() {
         @Override
         public OffsetDateTime apply(TemporalAccessor temporalAccessor) {
@@ -81,10 +95,18 @@ public class CustomInstantDeserializer<T extends Temporal>
           return d.withOffsetSameInstant(z.getRules().getOffset(d.toLocalDateTime()));
         }
       }
+      {{/java8}}
   );
 
   public static final CustomInstantDeserializer<ZonedDateTime> ZONED_DATE_TIME = new CustomInstantDeserializer<ZonedDateTime>(
       ZonedDateTime.class, DateTimeFormatter.ISO_ZONED_DATE_TIME,
+      {{#java8}}
+      (TemporalAccessor temporalAccessor)          -> ZonedDateTime.from(temporalAccessor),
+      (FromIntegerArguments a)                     -> ZonedDateTime.ofInstant(Instant.ofEpochMilli(a.value), a.zoneId),
+      (FromDecimalArguments a)                     -> ZonedDateTime.ofInstant(Instant.ofEpochSecond(a.integer, a.fraction), a.zoneId),
+      (ZonedDateTime zonedDateTime, ZoneId zoneId) -> zonedDateTime.withZoneSameInstant(zoneId)
+      {{/java8}}
+      {{^java8}}
       new Function<TemporalAccessor, ZonedDateTime>() {
         @Override
         public ZonedDateTime apply(TemporalAccessor temporalAccessor) {
@@ -109,6 +131,7 @@ public class CustomInstantDeserializer<T extends Temporal>
           return zonedDateTime.withZoneSameInstant(zoneId);
         }
       }
+      {{/java8}}
   );
 
   protected final Function<FromIntegerArguments, T> fromMilliseconds;
