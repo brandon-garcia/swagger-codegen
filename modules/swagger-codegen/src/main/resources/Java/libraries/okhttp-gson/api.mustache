@@ -80,7 +80,6 @@ public class {{classname}} {
             throw ApiException.missingParam("{{paramName}}", "{{operationId}}(Async)");
         }
         {{/required}}{{/allParams}}
-
         {{/performBeanValidation}}
         {{#performBeanValidation}}
         try {
@@ -155,7 +154,6 @@ public class {{classname}} {
         {{#returnType}}Type {{localVariablePrefix}}localVarReturnType = new TypeToken<{{{returnType}}}>(){}.getType();
         return ({{returnType}}){{localVariablePrefix}}apiClient.execute({{localVariablePrefix}}call, {{localVariablePrefix}}localVarReturnType)
             .getData();{{/returnType}}{{^returnType}}{{localVariablePrefix}}apiClient.execute({{localVariablePrefix}}call);{{/returnType}}
-
     }
     {{/operation}}
 }
