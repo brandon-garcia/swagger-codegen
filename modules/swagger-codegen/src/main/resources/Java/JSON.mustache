@@ -11,7 +11,9 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import com.google.gson.JsonElement;
 import io.gsonfire.GsonFireBuilder;
+{{#parent}}
 import io.gsonfire.TypeSelector;
+{{/parent}}
 {{#joda}}
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
@@ -43,7 +45,9 @@ import java.time.format.DateTimeFormatter;
 {{/java8}}
 import java.util.Date;
 import java.util.Map;
+{{#parent}}
 import java.util.HashMap;
+{{/parent}}
 
 import lombok.Getter;
 import lombok.Setter;
