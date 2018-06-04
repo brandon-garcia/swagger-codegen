@@ -19,20 +19,20 @@ public class Pair {
     }
 
     private void setName(String name) {
-        if (!isValidString(name)) {
+        if (isNotValidString(name)) {
             return;
         }
         this.name = name;
     }
 
     private void setValue(String value) {
-        if (!isValidString(value)) {
+        if (isNotValidString(value)) {
             return;
         }
         this.value = value;
     }
 
-    private boolean isValidString(String arg) {
-        return !(arg == null || arg.trim().isEmpty());
+    private boolean isNotValidString(String arg) {
+        return (arg == null || arg.trim().isEmpty());
     }
 }
