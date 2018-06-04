@@ -63,7 +63,7 @@ public class ApiClient {
     @Getter
     private boolean debugging = false;
 
-    private Map<String, String> defaultHeaderMap = new HashMap<>();
+    private final Map<String, String> defaultHeaderMap = new HashMap<>();
 
     /**
      * The path of temporary folder used to store downloaded files from endpoints
