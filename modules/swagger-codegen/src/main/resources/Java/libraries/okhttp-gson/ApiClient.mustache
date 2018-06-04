@@ -749,7 +749,7 @@ public class ApiClient {
             }
         }
 
-        String prefix = null;
+        String prefix;
         String suffix = null;
         if (filename == null) {
             prefix = "download-";
@@ -957,7 +957,7 @@ public class ApiClient {
             reqBody = serialize(body, contentType);
         }
 
-        Request request = null;
+        Request request;
 
         if(progressRequestListener != null && reqBody != null) {
             ProgressRequestBody progressRequestBody = new ProgressRequestBody(reqBody, progressRequestListener);
