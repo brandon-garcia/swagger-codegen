@@ -96,6 +96,7 @@ public class ApiClient {
     @Getter @Setter
     private OkHttpClient httpClient;
 
+    @Getter @Setter
     private JSON json;
 
     private HttpLoggingInterceptor loggingInterceptor;
@@ -125,26 +126,6 @@ public class ApiClient {
         authentications.put("{{name}}", new OAuth());{{/isOAuth}}{{/authMethods}}
         // Prevent the authentications from being modified.
         authentications = Collections.unmodifiableMap(authentications);
-    }
-
-    /**
-     * Get JSON
-     *
-     * @return JSON object
-     */
-    public JSON getJSON() {
-        return json;
-    }
-
-    /**
-     * Set JSON
-     *
-     * @param json JSON object
-     * @return Api client
-     */
-    public ApiClient setJSON(JSON json) {
-        this.json = json;
-        return this;
     }
 
     /**
